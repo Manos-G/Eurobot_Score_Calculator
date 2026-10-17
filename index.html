@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eurobot 2026 Score Calculator - Winter is Coming</title>
+    <title>Eurobot 2027 Score Calculator - Camelot</title>
     <style>
         :root {
             --primary-bg: #f4f7f6;
@@ -168,6 +168,21 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
+        .action-group select {
+            flex: 0 0 auto;
+            max-width: 50%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .warning {
+            color: #b00020;
+            font-size: 0.85rem;
+            min-height: 1em;
+        }
+
         .cite {
             font-size: 0.75rem;
             color: #777;
@@ -179,122 +194,114 @@
 <body>
 
     <div class="calculator">
-        <h1>Winter is Coming</h1>
-        <p style="text-align: center; color: #666;">Eurobot 2026 Score Calculator</p>
+        <h1>Camelot</h1>
+        <p style="text-align: center; color: #666;">Eurobot 2027 Score Calculator</p>
 
-        <h2>E.1 Let's Keep the Hazelnuts Warm!</h2>
+        <h2>E.1 Construction of the Glorious Camelot!</h2>
         <div class="action-group">
             <label>
-                Hazelnut crates in nest (2 pts each)
-                <span class="cite">Max 6 crates.</span>
+                Stones placed in a construction zone (1 pt each)
+                <span class="cite">30 stones on the table.</span>
             </label>
             <div class="number-control">
-                <button class="btn-step" onclick="stepInput('crates_nest', -1)">-</button>
-                <input type="number" id="crates_nest" min="0" max="6" value="0">
-                <button class="btn-step" onclick="stepInput('crates_nest', 1)">+</button>
+                <button class="btn-step" onclick="stepInput('stones_placed', -1)">-</button>
+                <input type="number" id="stones_placed" min="0" max="30" value="0">
+                <button class="btn-step" onclick="stepInput('stones_placed', 1)">+</button>
             </div>
         </div>
         <div class="action-group">
             <label>
-                Hazelnut crates valid in a pantry (3 pts each)
-                <span class="cite">No limit.</span>
+                Walls built (5 pts each)
+                <span class="cite">3 horizontal stones stacked in a wall area.</span>
             </label>
             <div class="number-control">
-                <button class="btn-step" onclick="stepInput('crates_pantry', -1)">-</button>
-                <input type="number" id="crates_pantry" min="0" value="0">
-                <button class="btn-step" onclick="stepInput('crates_pantry', 1)">+</button>
+                <button class="btn-step" onclick="stepInput('walls_built', -1)">-</button>
+                <input type="number" id="walls_built" min="0" max="5" value="0">
+                <button class="btn-step" onclick="stepInput('walls_built', 1)">+</button>
             </div>
         </div>
         <div class="action-group">
             <label>
-                Zones granting a bonus (5 pts each)
-                <span class="cite">Absolute majority required.</span>
+                Towers built (5 pts each)
+                <span class="cite">1 vertical stone in a circular area.</span>
             </label>
             <div class="number-control">
-                <button class="btn-step" onclick="stepInput('bonus_zones', -1)">-</button>
-                <input type="number" id="bonus_zones" min="0" max="10" value="0">
-                <button class="btn-step" onclick="stepInput('bonus_zones', 1)">+</button>
-            </div>
-        </div>
-
-        <h2>E.2 To Find is to Keep!</h2>
-        <div class="action-group">
-            <label>
-                Fridges empty of hazelnut crates (2 pts each)
-                <span class="cite">Points scored for both teams.</span>
-            </label>
-            <div class="number-control">
-                <button class="btn-step" onclick="stepInput('fridges_empty', -1)">-</button>
-                <input type="number" id="fridges_empty" min="0" max="4" value="0">
-                <button class="btn-step" onclick="stepInput('fridges_empty', 1)">+</button>
+                <button class="btn-step" onclick="stepInput('towers_built', -1)">-</button>
+                <input type="number" id="towers_built" min="0" max="4" value="0">
+                <button class="btn-step" onclick="stepInput('towers_built', 1)">+</button>
             </div>
         </div>
         <div class="action-group">
             <label>
-                Fridges full of empty crates (5 pts each)
-                <span class="cite">Points scored for both teams.</span>
-            </label>
-            <div class="number-control">
-                <button class="btn-step" onclick="stepInput('fridges_full', -1)">-</button>
-                <input type="number" id="fridges_full" min="0" max="4" value="0">
-                <button class="btn-step" onclick="stepInput('fridges_full', 1)">+</button>
-            </div>
-        </div>
-
-        <h2>E.3 Not Too Warm, Not Too Cold</h2>
-        <div class="action-group">
-            <label>
-                Thermometer Zone Reached (0-10 pts)
-                <span class="cite">Divided into 11 numbered zones.</span>
-            </label>
-            <div class="number-control">
-                <button class="btn-step" onclick="stepInput('thermometer_score', -1)">-</button>
-                <input type="number" id="thermometer_score" min="0" max="10" value="0">
-                <button class="btn-step" onclick="stepInput('thermometer_score', 1)">+</button>
-            </div>
-        </div>
-
-        <h2>E.4 Nest, Sweet Nest</h2>
-        <div class="action-group">
-            <label>
-                Robot Partially in valid area (5 pts)
+                Gate built (20 pts)
+                <span class="cite">2 vertical stones topped by 1 horizontal stone. Max 1 per castle.</span>
             </label>
             <label class="switch">
-                <input type="checkbox" id="robot_partially">
+                <input type="checkbox" id="gate_built">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="warning" id="stones_warning"></div>
+
+        <h2>E.2 I Have the Real One!</h2>
+        <div class="action-group">
+            <label>
+                Grail position (5 pts in castle + 5 pts per level)
+                <span class="cite">Level of the lowest point of the Grail at the end of the match.</span>
+            </label>
+            <select id="grail_level">
+                <option value="-1">Not in castle</option>
+                <option value="0">In castle, floor</option>
+                <option value="1">Level 1 (1 horizontal stone)</option>
+                <option value="2">Level 2 (2 horizontal stones)</option>
+                <option value="3">Level 3 (3 horizontal / 1 vertical)</option>
+                <option value="4">Level 4 (robot roof)</option>
+            </select>
+        </div>
+
+        <h2>E.3 The Return of the King</h2>
+        <div class="action-group">
+            <label>
+                Main robot in its throne room
+                <span class="cite">Partially: 5 pts. Completely: 10 pts.</span>
+            </label>
+            <select id="robot_area">
+                <option value="0">No</option>
+                <option value="5">Partially</option>
+                <option value="10">Completely</option>
+            </select>
+        </div>
+
+        <h2>E.4 To the Attack!</h2>
+        <div class="action-group">
+            <label>
+                Opposing moats occupied by a SIMA (5 pts each)
+            </label>
+            <div class="number-control">
+                <button class="btn-step" onclick="stepInput('moats_occupied', -1)">-</button>
+                <input type="number" id="moats_occupied" min="0" max="3" value="0">
+                <button class="btn-step" onclick="stepInput('moats_occupied', 1)">+</button>
+            </div>
+        </div>
+        <div class="action-group">
+            <label>
+                At least one SIMA attacks an opposing SIMA (5 pts)
+            </label>
+            <label class="switch">
+                <input type="checkbox" id="sima_attack">
                 <span class="slider"></span>
             </label>
         </div>
         <div class="action-group">
             <label>
-                Robot Completely in valid area (+5 pts)
-                <span class="cite">5 additional points.</span>
-            </label>
-            <label class="switch">
-                <input type="checkbox" id="robot_completely">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <h2>E.5 Munch Time!</h2>
-        <div class="action-group">
-            <label>
-                Pantries occupied by team SIMA (5 pts each)
+                Cannonballs in the opposing castle (5 pts each)
+                <span class="cite">+15 pts if 3 or more. 10 cannonballs per team.</span>
             </label>
             <div class="number-control">
-                <button class="btn-step" onclick="stepInput('sima_pantries', -1)">-</button>
-                <input type="number" id="sima_pantries" min="0" max="6" value="0">
-                <button class="btn-step" onclick="stepInput('sima_pantries', 1)">+</button>
+                <button class="btn-step" onclick="stepInput('cannonballs', -1)">-</button>
+                <input type="number" id="cannonballs" min="0" max="10" value="0">
+                <button class="btn-step" onclick="stepInput('cannonballs', 1)">+</button>
             </div>
-        </div>
-        <div class="action-group">
-            <label>
-                All SIMA eat the hazelnuts (10 pts)
-                <span class="cite">Actuator moving while standing still.</span>
-            </label>
-            <label class="switch">
-                <input type="checkbox" id="sima_eat">
-                <span class="slider"></span>
-            </label>
         </div>
 
         <div class="score-display">
@@ -321,61 +328,57 @@
             }
         }
 
-        // UX Enhancement: If 'completely' is checked, 'partially' should automatically be checked.
-        const completelyToggle = document.getElementById('robot_completely');
-        const partiallyToggle = document.getElementById('robot_partially');
-
-        completelyToggle.addEventListener('change', function() {
-            if (this.checked) {
-                partiallyToggle.checked = true;
-            }
-            calculateScore(); // Re-calculate for switches
-        });
-
-        partiallyToggle.addEventListener('change', function() {
-            if (!this.checked) {
-                completelyToggle.checked = false;
-            }
-            calculateScore(); // Re-calculate for switches
-        });
+        function getInt(id) {
+            return parseInt(document.getElementById(id).value) || 0;
+        }
 
         // Calculation Logic
-        const inputs = document.querySelectorAll('input');
+        const inputs = document.querySelectorAll('input, select');
         const scoreDisplay = document.getElementById('total_score');
+        const stonesWarning = document.getElementById('stones_warning');
 
         function calculateScore() {
             let score = 0;
 
             // E.1
-            score += (parseInt(document.getElementById('crates_nest').value) || 0) * 2;
-            score += (parseInt(document.getElementById('crates_pantry').value) || 0) * 3;
-            score += (parseInt(document.getElementById('bonus_zones').value) || 0) * 5;
+            const stones = getInt('stones_placed');
+            const walls = getInt('walls_built');
+            const towers = getInt('towers_built');
+            const gate = document.getElementById('gate_built').checked;
+            score += stones * 1;
+            score += walls * 5;
+            score += towers * 5;
+            if (gate) score += 20;
+
+            // A stone cannot count for multiple constructions at the same time
+            const stonesNeeded = walls * 3 + towers + (gate ? 3 : 0);
+            stonesWarning.textContent = stones < stonesNeeded
+                ? `Check: these constructions use at least ${stonesNeeded} stones.`
+                : '';
 
             // E.2
-            score += (parseInt(document.getElementById('fridges_empty').value) || 0) * 2;
-            score += (parseInt(document.getElementById('fridges_full').value) || 0) * 5;
+            const grailLevel = parseInt(document.getElementById('grail_level').value);
+            if (grailLevel >= 0) score += 5 + grailLevel * 5;
 
             // E.3
-            score += (parseInt(document.getElementById('thermometer_score').value) || 0);
+            score += parseInt(document.getElementById('robot_area').value);
 
             // E.4
-            if (partiallyToggle.checked) score += 5;
-            if (completelyToggle.checked) score += 5;
-
-            // E.5
-            score += (parseInt(document.getElementById('sima_pantries').value) || 0) * 5;
-            if (document.getElementById('sima_eat').checked) score += 10;
+            score += getInt('moats_occupied') * 5;
+            if (document.getElementById('sima_attack').checked) score += 5;
+            const cannonballs = getInt('cannonballs');
+            score += cannonballs * 5;
+            if (cannonballs >= 3) score += 15;
 
             scoreDisplay.textContent = score;
         }
 
-    // Attach event listeners to all inputs to update score dynamically
-    inputs.forEach(input => {
-        if (input.type === 'number' || input.type === 'checkbox') { 
+        // Attach event listeners to all inputs to update score dynamically
+        inputs.forEach(input => {
             input.addEventListener('input', calculateScore);
             input.addEventListener('change', calculateScore);
-        }
-    });
+        });
+
         // Initial Calculation
         calculateScore();
     </script>
