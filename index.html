@@ -12,6 +12,49 @@
             --blue-team: #005b8c; /* RAL 5017 */
             --yellow-team: #f7b500; /* RAL 1023 */
             --accent: #2e8b57;
+            --btn-hover: #00446b;
+            --muted-text: #666;
+            --heading-color: #005b8c;
+            --border-color: #eee;
+            --input-bg: #ffffff;
+            --input-border: #ccc;
+            --slider-off: #ccc;
+            --warning-color: #b00020;
+            --shadow-color: rgba(0,0,0,0.1);
+            color-scheme: light;
+        }
+
+        /* Dark theme: follows the operating system unless the user picks a theme */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --primary-bg: #121417;
+                --container-bg: #1e2227;
+                --text-color: #e4e6e8;
+                --muted-text: #9aa0a6;
+                --heading-color: #6cb4e0;
+                --border-color: #33383e;
+                --input-bg: #2a2f35;
+                --input-border: #4a5058;
+                --slider-off: #555b62;
+                --warning-color: #ff8a80;
+                --shadow-color: rgba(0,0,0,0.5);
+                color-scheme: dark;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --primary-bg: #121417;
+            --container-bg: #1e2227;
+            --text-color: #e4e6e8;
+            --muted-text: #9aa0a6;
+            --heading-color: #6cb4e0;
+            --border-color: #33383e;
+            --input-bg: #2a2f35;
+            --input-border: #4a5058;
+            --slider-off: #555b62;
+            --warning-color: #ff8a80;
+            --shadow-color: rgba(0,0,0,0.5);
+            color-scheme: dark;
         }
 
         body {
@@ -28,14 +71,15 @@
             background-color: var(--container-bg);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px var(--shadow-color);
+            position: relative;
             max-width: 600px;
             width: 100%;
         }
 
         h1 {
             text-align: center;
-            color: var(--blue-team);
+            color: var(--heading-color);
             margin-bottom: 5px;
         }
 
@@ -44,7 +88,7 @@
             padding-bottom: 5px;
             margin-top: 30px;
             font-size: 1.2rem;
-            color: var(--blue-team);
+            color: var(--heading-color);
         }
 
         .action-group {
@@ -53,7 +97,7 @@
             align-items: center;
             margin-bottom: 15px;
             padding: 10px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
         }
 
         /* Fixed Label Stretching CSS */
@@ -85,7 +129,7 @@
         }
 
         .btn-step:hover {
-            background-color: #00446b;
+            background-color: var(--btn-hover);
         }
 
         .btn-step:active {
@@ -96,7 +140,9 @@
             width: 50px;
             padding: 6px;
             margin: 0 8px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--text-color);
             border-radius: 6px;
             text-align: center;
             font-size: 1rem;
@@ -129,7 +175,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
+            background-color: var(--slider-off);
             transition: .4s;
             border-radius: 34px;
         }
@@ -172,30 +218,60 @@
             flex: 0 0 auto;
             max-width: 50%;
             padding: 6px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--text-color);
             border-radius: 6px;
             font-size: 1rem;
         }
 
         .warning {
-            color: #b00020;
+            color: var(--warning-color);
             font-size: 0.85rem;
             min-height: 1em;
         }
 
+        .subtitle {
+            text-align: center;
+            color: var(--muted-text);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            color: var(--muted-text);
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
         .cite {
             font-size: 0.75rem;
-            color: #777;
+            color: var(--muted-text);
             display: block;
             margin-top: 4px;
         }
     </style>
+    <script>
+        // Apply the saved theme before the page is drawn, to prevent a flash of the wrong theme
+        try {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                document.documentElement.dataset.theme = savedTheme;
+            }
+        } catch (e) {}
+    </script>
 </head>
 <body>
 
     <div class="calculator">
+        <button class="theme-toggle" id="theme_toggle" type="button">Theme: Auto</button>
         <h1>Camelot</h1>
-        <p style="text-align: center; color: #666;">Eurobot 2027 Score Calculator</p>
+        <p class="subtitle">Eurobot 2027 Score Calculator</p>
 
         <h2>E.1 Construction of the Glorious Camelot!</h2>
         <div class="action-group">
@@ -378,6 +454,31 @@
             input.addEventListener('input', calculateScore);
             input.addEventListener('change', calculateScore);
         });
+
+        // Theme toggle: Auto (operating system setting) -> Light -> Dark
+        const themeToggle = document.getElementById('theme_toggle');
+        const themeOrder = ['auto', 'light', 'dark'];
+        const themeLabels = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+
+        function applyTheme(theme) {
+            if (theme === 'auto') {
+                delete document.documentElement.dataset.theme;
+            } else {
+                document.documentElement.dataset.theme = theme;
+            }
+            themeToggle.textContent = 'Theme: ' + themeLabels[theme];
+            try {
+                if (theme === 'auto') localStorage.removeItem('theme');
+                else localStorage.setItem('theme', theme);
+            } catch (e) {}
+        }
+
+        themeToggle.addEventListener('click', function() {
+            const current = document.documentElement.dataset.theme || 'auto';
+            applyTheme(themeOrder[(themeOrder.indexOf(current) + 1) % themeOrder.length]);
+        });
+
+        applyTheme(document.documentElement.dataset.theme || 'auto');
 
         // Initial Calculation
         calculateScore();
